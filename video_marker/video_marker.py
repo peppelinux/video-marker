@@ -56,7 +56,6 @@ class VideoMarker(object):
         watermark = cv2.cvtColor(watermark, cv2.COLOR_BGR2BGRA)
         return watermark
 
-    # prepend video
     def pre_post_video(self, media:str):
         if not media or not os.path.isfile(media):
             return
@@ -116,7 +115,7 @@ class VideoMarker(object):
                 if cv2.waitKey(20) & 0xFF == ord('q'):
                     break
 
-    def record(self):
+    def start(self):
         self.pre_post_video(media = self.pre_media)
         _watermark = self.get_watermark()
         self.record_video(watermark = _watermark)
