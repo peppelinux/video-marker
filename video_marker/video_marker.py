@@ -2,6 +2,7 @@ import cv2
 import logging
 import numpy as np
 import os
+import signal
 
 from . utils import CFEVideoConf, image_resize
 
@@ -39,6 +40,7 @@ class VideoMarker(object):
         )
         config = CFEVideoConf(self.capture, **self.vconf)
         self.video_writer = cv2.VideoWriter(save_path, config.video_type, frames_per_seconds, config.dims)
+        self.state = 0
 
     def get_watermark(self):
         if not self.watermark_fpath:
@@ -87,7 +89,7 @@ class VideoMarker(object):
         else:
             _add_watermark = False
 
-        while(True):
+        while (self.state >= 0):
             # Capture frame-by-frame
             ret, frame = self.capture.read()
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2BGRA)
@@ -115,7 +117,18 @@ class VideoMarker(object):
                 if cv2.waitKey(20) & 0xFF == ord('q'):
                     break
 
+    def repr_params(self):
+        return '\n'.join([f"{k}: {v}" for k,v in self.__dict__.items()])
+
+    def signal_handler(self, sig, frame):
+        logger.info('INT Signal received, shutting down')
+        self.state = -1
+        # sys.exit(0)
+
     def start(self):
+        self.state = 1
+        signal.signal(signal.SIGTERM, self.signal_handler)
+        logger.info(f"Starting video recording with {self.repr_params()}")
         self.pre_post_video(media = self.pre_media)
         _watermark = self.get_watermark()
         self.record_video(watermark = _watermark)

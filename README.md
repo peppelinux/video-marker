@@ -37,6 +37,9 @@ A quite complete example
 video_marker --watermark-fpath 'assets/logo.png' --monitor --pre-media assets/intro.mp4  --post-media assets/intro.mp4  --watermark-size 50
 ````
 
+You can stop the video recording gracefully, with `SIGTERM` signal `kill -SIGTERM $(ps a | grep video_marker | grep python | awk -F' ' {'print $1'} | xargs kill -SIGTERM)`.
+
+
 ## License
 
 ses [LICENSE](LICENSE) file.
