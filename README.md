@@ -1,12 +1,13 @@
 Video Marker
 ------------
 
-Video Marker is a python application based on OpenCV that can automate:
+Video Marker is a python application based on OpenCV that can automate the following tasks:
 
-- a video record from a webcam and save to a file
+- video recording from a webcam or any other OpenVC VideoCapture source
 - prepend a video before your video record starts
 - append a video after your video record ends
 - add a watermark image
+- save to a file
 
 ## Setup
 
@@ -21,7 +22,7 @@ video_marker -h
 
 ## Usage examples
 
-Monitor your webcam
+Monitor your webcam, press `q` key on the keyboard or `CTRL+c`
 ````
 video_marker --video-cap 0 --monitor
 ````
