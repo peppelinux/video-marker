@@ -19,7 +19,19 @@ pip install video-marker
 video_marker -h
 ````
 
-## Example
+## Usage examples
+
+Monitor your webcam
+````
+video_marker --video-cap 0 --monitor
+````
+
+Add watermark to your webcam
+````
+video_marker --watermark-fpath 'assets/logo.png' --monitor
+````
+
+A quite complete example
 ````
 video_marker --watermark-fpath 'assets/logo.png' --monitor --pre-media assets/intro.mp4  --post-media assets/intro.mp4  --watermark-size 50
 ````
