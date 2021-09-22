@@ -1,0 +1,69 @@
+import argparse
+import logging
+
+from video_marker.video_marker import VideoMarker
+
+parser = argparse.ArgumentParser(
+    description=f"{__file__} prepends, appends and adds a watermark to your live video recording",
+    epilog=f"{__file__} arguments",
+    formatter_class=argparse.RawTextHelpFormatter
+)
+
+parser.add_argument(
+    '--resolution',
+    required=False,
+    default='720p',
+    choices = ['360p', '480p', '720p', '1080p', '4k'],
+    help=("video recording resolution")
+)
+parser.add_argument(
+    '--save-path',
+    required=False,
+    default='output/output.avi',
+    help=("where your video recording file will be saved")
+)
+parser.add_argument(
+    '--frames-per-seconds',
+    required=False, default=50,
+    help=("FPS")
+)
+parser.add_argument(
+    '--watermark-fpath',
+    required=False,
+    help=("image file to add as watermark")
+)
+parser.add_argument(
+    '--watermark-size',
+    type=int,
+    required=False,
+    help=("watermark size")
+)
+parser.add_argument(
+    '--pre-media',
+    required=False,
+    help=("example: assets/intro.mp4")
+)
+parser.add_argument(
+    '--post-media',
+    required=False,
+    help=("example: assets/intro.mp4")
+)
+parser.add_argument(
+    '--monitor',
+    action="store_true",
+    default=False,
+    help=("display a recording monitor for debug purpose ")
+)
+parser.add_argument(
+    '-d', '--debug', required=False,
+    choices=('CRITICAL', 'ERROR',
+             'WARNING', 'INFO', 'DEBUG'),
+    default='INFO',
+    help="Debug level, see python logging; defaults to INFO if omitted"
+)
+
+_args = parser.parse_args()
+logging.basicConfig(level=getattr(logging, _args.debug))
+
+vm = VideoMarker(**_args.__dict__)
+vm.record()
