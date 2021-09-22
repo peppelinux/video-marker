@@ -13,7 +13,7 @@ class VideoMarker(object):
     VIDEO_RES = '720p'
 
     def __init__(self,
-                 video_cap:cv2.VideoCapture = None,
+                 video_cap:str = "0",
                  resolution:str = VIDEO_RES,
                  save_path = 'output/output.avi',
                  frames_per_seconds = 50,
@@ -23,7 +23,8 @@ class VideoMarker(object):
                  watermark_size = 50,
                  monitor = False, **kwargs
         ):
-        self.capture = video_cap or cv2.VideoCapture(0)
+        video_source = int(video_cap) if video_cap.isdigit() else video_cap
+        self.capture = cv2.VideoCapture(video_source)
         self.video_size = CFEVideoConf.STD_DIMENSIONS[resolution]
 
         self.watermark_fpath = watermark_fpath

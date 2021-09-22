@@ -1,14 +1,20 @@
+#!/usr/bin/env python3
 import argparse
 import logging
 
 from video_marker.video_marker import VideoMarker
 
 parser = argparse.ArgumentParser(
-    description=f"{__file__} prepends, appends and adds a watermark to your live video recording",
+    description=f"{__file__} prepends, appends and adds a watermark to your live video recording.",
     epilog=f"{__file__} arguments",
     formatter_class=argparse.RawTextHelpFormatter
 )
-
+parser.add_argument(
+    '--video-cap',
+    required=False,
+    default="0",
+    help=("select a video source, 0 means your first camera device. You can even use a video image path.")
+)
 parser.add_argument(
     '--resolution',
     required=False,
