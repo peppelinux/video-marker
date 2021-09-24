@@ -98,30 +98,44 @@ class VideoMarker(object):
         else:
             _add_watermark = False
 
+        slow_down_by = range(self.slow_down_by - 1)
+
+        # optimizations
+        cvtColor = cv2.cvtColor
+        zeros = np.zeros
+        addWeighted = cv2.addWeighted
+        cv2_resize = cv2.resize
+        COLOR_BGRA2BGR = cv2.COLOR_BGRA2BGR
+        COLOR_BGR2BGRA = cv2.COLOR_BGR2BGRA
+
+        # frame sample
+        ret, frame = self.capture.read()
+        frame = cvtColor(frame, cv2.COLOR_BGR2BGRA)
+        frame_h, frame_w, frame_c = frame.shape
+        # overlay with 4 channels BGR and Alpha
+        overlay = zeros((frame_h, frame_w, 4), dtype='uint8')
+
+        if _add_watermark:
+            for i in h_range:
+                for j in w_range:
+                    offset = 10
+                    h_offset = frame_h - watermark_h - offset
+                    w_offset = frame_w - watermark_w - offset
+                    overlay[h_offset + i, w_offset+ j] = watermark[i,j]
+
         while (self.state >= 0):
             # Capture frame-by-frame
             ret, frame = self.capture.read()
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2BGRA)
-            frame_h, frame_w, frame_c = frame.shape
-            # overlay with 4 channels BGR and Alpha
-            overlay = np.zeros((frame_h, frame_w, 4), dtype='uint8')
+            frame = cvtColor(frame, COLOR_BGR2BGRA)
 
             if _add_watermark:
-                for i in h_range:
-                    for j in w_range:
-                        offset = 10
-                        h_offset = frame_h - watermark_h - offset
-                        w_offset = frame_w - watermark_w - offset
-                        overlay[h_offset + i, w_offset+ j] = watermark[i,j]
+                addWeighted(overlay, 0.25, frame, 1.0, 0, frame)
 
-                # add watermark here
-                cv2.addWeighted(overlay, 0.25, frame, 1.0, 0, frame)
-
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
-            resized = cv2.resize(frame, self.video_size)
+            frame = cvtColor(frame, COLOR_BGRA2BGR)
+            resized = cv2_resize(frame, self.video_size)
 
             self.video_writer.write(resized)
-            for n in range(self.slow_down_by - 1):
+            for n in slow_down_by:
                 self.video_writer.write(resized)
 
             if self.monitor:
