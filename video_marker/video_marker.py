@@ -22,6 +22,7 @@ class VideoMarker(object):
                  pre_media = 'assets/intro.mp4',
                  post_media = 'assets/intro.mp4',
                  watermark_size = 50,
+                 watermark_inverted = False,
                  monitor = False, **kwargs
         ):
         video_source = int(video_cap) if video_cap.isdigit() else video_cap
@@ -30,6 +31,7 @@ class VideoMarker(object):
 
         self.watermark_fpath = watermark_fpath
         self.watermark_size = watermark_size
+        self.watermark_inverted = watermark_inverted
         self.pre_media = pre_media
         self.post_media = post_media
         self.monitor = monitor
@@ -53,6 +55,10 @@ class VideoMarker(object):
 
         alpha = logo[:,:,1] # Channel 3
         result = np.dstack([logo, alpha]) # Add the alpha channel
+
+        if self.watermark_inverted:
+            # invert the array
+            result = np.invert(result)
 
         watermark = image_resize(result, height=self.watermark_size)
         watermark = cv2.cvtColor(watermark, cv2.COLOR_BGR2BGRA)
@@ -104,6 +110,7 @@ class VideoMarker(object):
                         h_offset = frame_h - watermark_h - offset
                         w_offset = frame_w - watermark_w - offset
                         overlay[h_offset + i, w_offset+ j] = watermark[i,j]
+
                 # add watermark here
                 cv2.addWeighted(overlay, 0.25, frame, 1.0, 0, frame)
 

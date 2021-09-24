@@ -40,6 +40,12 @@ parser.add_argument(
     help=("image file to add as watermark")
 )
 parser.add_argument(
+    '--watermark-inverted',
+    action="store_true",
+    default=False,
+    help=("invert watermak image")
+)
+parser.add_argument(
     '--watermark-size',
     type=int,
     required=False,
