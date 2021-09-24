@@ -23,11 +23,14 @@ class VideoMarker(object):
                  post_media = 'assets/intro.mp4',
                  watermark_size = 50,
                  watermark_inverted = False,
+                 slow_down_by = 0,
                  monitor = False, **kwargs
         ):
         video_source = int(video_cap) if video_cap.isdigit() else video_cap
         self.capture = cv2.VideoCapture(video_source)
         self.video_size = CFEVideoConf.STD_DIMENSIONS[resolution]
+
+        self.slow_down_by = slow_down_by
 
         self.watermark_fpath = watermark_fpath
         self.watermark_size = watermark_size
@@ -116,7 +119,10 @@ class VideoMarker(object):
 
             frame = cv2.cvtColor(frame, cv2.COLOR_BGRA2BGR)
             resized = cv2.resize(frame, self.video_size)
+
             self.video_writer.write(resized)
+            for n in range(self.slow_down_by - 1):
+                self.video_writer.write(resized)
 
             if self.monitor:
                 # Display the resulting frame
