@@ -111,7 +111,7 @@ class VideoMarker(object):
 
         # frame sample
         ret, frame = self.capture.read()
-        if not frame:
+        if not hasattr(frame, 'any') or not frame.any():
             logger.critical("Missing frame in .capture.read() ... exit")
             raise MissingFrame("OpenCV frame is None, check video device")
         frame = cvtColor(frame, cv2.COLOR_BGR2BGRA)
