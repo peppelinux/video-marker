@@ -1,0 +1,2 @@
+class MissingFrame(Exception):
+    pass

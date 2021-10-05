@@ -4,6 +4,7 @@ import numpy as np
 import os
 import signal
 
+from .exceptions import MissingFrame
 from . utils import CFEVideoConf, image_resize
 
 logger = logging.getLogger(__name__)
@@ -110,7 +111,11 @@ class VideoMarker(object):
 
         # frame sample
         ret, frame = self.capture.read()
+        if not frame:
+            logger.critical("Missing frame in .capture.read() ... exit")
+            raise MissingFrame("OpenCV frame is None, check video device")
         frame = cvtColor(frame, cv2.COLOR_BGR2BGRA)
+
         frame_h, frame_w, frame_c = frame.shape
         # overlay with 4 channels BGR and Alpha
         overlay = zeros((frame_h, frame_w, 4), dtype='uint8')
