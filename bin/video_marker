@@ -68,6 +68,22 @@ parser.add_argument(
     help=("how much the recording video will be slowed")
 )
 parser.add_argument(
+    '--exception-grace-period',
+    required=False, default=0.3,
+    type=float,
+    help=("time sleep if an exception happens reading "
+          "the VideoSource during recording"
+    )
+)
+parser.add_argument(
+    '--max-recording-exceptions',
+    required=False, default=4,
+    type=int,
+    help=("how many times the recorder retries the "
+          "frame acquisition from Video device"
+    )
+)
+parser.add_argument(
     '--monitor',
     action="store_true",
     default=False,
