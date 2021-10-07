@@ -44,8 +44,9 @@ class CFEVideoConf(object):
     # Types of Codes: http://www.fourcc.org/codecs.php
     VIDEO_TYPE = {
         'avi': cv2.VideoWriter_fourcc(*'XVID'),
-        #'mp4': cv2.VideoWriter_fourcc(*'H264'),
-        'mp4': cv2.VideoWriter_fourcc(*'XVID'),
+        #'avi': cv2.VideoWriter_fourcc(*'X264'),
+        'mjpeg': cv2.VideoWriter_fourcc(*'MJPG'),
+        'mp4': cv2.VideoWriter_fourcc(*'mp4v')
     }
 
     width           = 640
@@ -74,7 +75,11 @@ class CFEVideoConf(object):
         return width, height
 
     def get_video_type(self):
-        filename, ext = os.path.splitext(self.filepath)
+        ext = self.filepath.rpartition('.')[-1]
         if ext in self.VIDEO_TYPE:
           return  self.VIDEO_TYPE[ext]
         return self.VIDEO_TYPE['avi']
+
+
+def print_available_codecs():
+    cv2.VideoWriter('output.mp4', -1, 12,(640,480))

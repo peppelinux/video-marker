@@ -47,7 +47,7 @@ class VideoMarker(object):
 
         self.video_writer_config_params = dict(
             res = resolution,
-            filepath = save_path,
+            filepath = save_path
         )
 
         self.state = 0
@@ -55,6 +55,7 @@ class VideoMarker(object):
         self.exception_grace_period = exception_grace_period
         self.max_recording_exceptions = max_recording_exceptions
         self.exceptions_counter = 0
+
 
         self._load_video_source()
 
@@ -90,9 +91,10 @@ class VideoMarker(object):
         self.video_writer_config = CFEVideoConf(
             self.capture, **self.video_writer_config_params
         )
+
         self.video_writer = cv2.VideoWriter(
             self.save_path, self.video_writer_config.video_type,
-            self.frames_per_seconds, self.video_writer_config.dims
+            self.frames_per_seconds, self.video_writer_config.dims,
         )
 
     @staticmethod

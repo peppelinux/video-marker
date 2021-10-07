@@ -5,6 +5,8 @@ import sys
 
 from video_marker import __version__
 from video_marker.video_marker import VideoMarker
+from video_marker.utils import print_available_codecs
+
 
 parser = argparse.ArgumentParser(
     description=f"{__file__} prepends, appends and adds a watermark to your live video recording.",
@@ -103,12 +105,20 @@ parser.add_argument(
     action="store_true",
     help="Print version and exit"
 )
+parser.add_argument(
+    '-sc', '--show-codecs', required=False,
+    action="store_true",
+    help="Print all the available codecs"
+)
 
 _args = parser.parse_args()
 logging.basicConfig(level=getattr(logging, _args.debug))
 
 if _args.version:
     sys.exit(f'{__version__}')
+elif _args.show_codecs:
+    print_available_codecs()
+    sys.exit()
 
 vm = VideoMarker(**_args.__dict__)
 vm.start()
