@@ -28,6 +28,7 @@ class VideoMarker(object):
                  slow_down_by = 0,
                  exception_grace_period = 0.2,
                  max_recording_exceptions = 4,
+                 flip = 0,
                  monitor = False, **kwargs
         ):
         self.video_source = int(video_cap) if video_cap.isdigit() else video_cap
@@ -55,7 +56,7 @@ class VideoMarker(object):
         self.exception_grace_period = exception_grace_period
         self.max_recording_exceptions = max_recording_exceptions
         self.exceptions_counter = 0
-
+        self.flip = flip
 
         self._load_video_source()
 
@@ -216,6 +217,8 @@ class VideoMarker(object):
                 addWeighted(overlay, 0.25, frame, 1.0, 0, frame)
 
             frame = cvtColor(frame, COLOR_BGRA2BGR)
+            if self.flip:
+                frame = cv2.flip(frame, self.flip)
             resized = cv2_resize(frame, self.video_size)
 
             self.video_writer.write(resized)

@@ -110,6 +110,13 @@ parser.add_argument(
     action="store_true",
     help="Print all the available codecs"
 )
+parser.add_argument(
+    '--flip',
+    required=False, default=0,
+    type=int,
+    choices=(0,1,-1),
+    help="Flip image,: 0, 1 or -1"
+)
 
 _args = parser.parse_args()
 logging.basicConfig(level=getattr(logging, _args.debug))
