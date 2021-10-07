@@ -89,6 +89,11 @@ class VideoMarker(object):
         self.video_writer_config_params['filepath'] = fpath
 
         self.capture = cv2.VideoCapture(self.video_source)
+        cam_fps = self.capture.get(cv2.CAP_PROP_FPS)
+        logger.info(
+            f"Your camera has {cam_fps} FPS, you choose to record {self.frames_per_seconds} fps"
+        )
+        self.capture.set(cv2.CAP_PROP_FPS, self.frames_per_seconds)
         self.video_writer_config = CFEVideoConf(
             self.capture, **self.video_writer_config_params
         )
