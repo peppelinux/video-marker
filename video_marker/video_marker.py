@@ -72,6 +72,20 @@ class VideoMarker(object):
             del(self.video_writer_config)
             del(self.video_writer)
 
+        # do not overwrite existing recordings
+        fpath = self.video_writer_config_params['filepath']
+        while os.path.exists(fpath):
+            logger.warning(
+                f"Found an existing video in {fpath}, trying to not overwrite it"
+            )
+            exploded_path = list(fpath.rpartition('/'))
+            exploded_path.insert(-1, '_')
+            fpath = ''.join(exploded_path)
+        self.save_path = fpath
+
+        logger.info(f"Writing video to {fpath}")
+        self.video_writer_config_params['filepath'] = fpath
+
         self.capture = cv2.VideoCapture(self.video_source)
         self.video_writer_config = CFEVideoConf(
             self.capture, **self.video_writer_config_params
